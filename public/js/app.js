@@ -5262,20 +5262,21 @@ __webpack_require__.r(__webpack_exports__);
       quantity: ''
     };
   },
+  computed: {
+    value: function value() {
+      return this.stock.value * this.stock.amount;
+    }
+  },
   methods: {
     buy: function buy() {
-      this.$store.commit('buyStock', {
+      this.$store.dispatch('buyStock', {
         'stock_id': this.stock.id,
         'quantity': this.quantity,
         'user_id': 1
       });
     },
     sell: function sell() {
-      var _this = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]('portfolio' + '/' + this.stock.id).then(function (response) {
-        return _this.$store.commit('refreshData');
-      });
+      this.$store.dispatch('sellStock', this.stock.id);
     }
   },
   props: ['portfolio', 'callToAction', 'name', 'description', 'stock']
@@ -5574,25 +5575,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 
-var mutations = {
-  'BUY_STOCK': function BUY_STOCK(state, order) {
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post('portfolio', order).then(function (response) {
-      return console.log(response.data)
-      /*this.$store.commit('loadStocks'),
-      this.$store.commit('loadPortfolio'),
-      this.$store.commit('loadFunds')*/
-      ;
-    });
-  }
-};
 var actions = {
   buyStock: function buyStock(_ref, order) {
     var commit = _ref.commit;
-    commit('BUY_STOCK', order);
+    axios__WEBPACK_IMPORTED_MODULE_0___default().post('portfolio', order).then(function (response) {
+      return console.log(response.data), commit('refreshData');
+    });
+  },
+  sellStock: function sellStock(_ref2, stock_id) {
+    var commit = _ref2.commit;
+    axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]('portfolio' + '/' + stock_id).then(function (response) {
+      return console.log(response.data), commit('refreshData');
+    });
   }
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  mutations: mutations,
   actions: actions
 });
 
@@ -5650,13 +5647,6 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_3_
     loadFunds: function loadFunds(state) {
       axios__WEBPACK_IMPORTED_MODULE_0___default().get('user/1').then(function (response) {
         return state.funds = response.data.funds;
-      });
-    },
-    buyStock: function buyStock(state, stock) {
-      var _this = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post('portfolio', stock).then(function (response) {
-        return console.log(response.data), _this.commit('refreshData');
       });
     },
     refreshData: function refreshData() {
@@ -11511,7 +11501,7 @@ var render = function () {
                   _vm._v(" "),
                   _c("p", {
                     domProps: {
-                      textContent: _vm._s("Now worth: " + _vm.stock.value),
+                      textContent: _vm._s("Now worth: " + _vm.value),
                     },
                   }),
                   _vm._v(" "),

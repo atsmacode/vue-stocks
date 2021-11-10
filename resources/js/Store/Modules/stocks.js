@@ -1,26 +1,24 @@
 import axios from "axios";
 
-const mutations = {
-    'BUY_STOCK' (state, order) {
+const actions = {
+    buyStock: ({commit}, order) => {
         axios
             .post('portfolio', order)
             .then(response => (
-                console.log(response.data)
-                /*this.$store.commit('loadStocks'),
-                this.$store.commit('loadPortfolio'),
-                this.$store.commit('loadFunds')*/
+                console.log(response.data),
+                commit('refreshData')
+            ));
+    },
+    sellStock: ({commit}, stock_id) => {
+        axios
+            .delete('portfolio' + '/' + stock_id)
+            .then(response => (
+                console.log(response.data),
+                    commit('refreshData')
             ));
     }
 };
 
-const actions = {
-    buyStock: ({commit}, order) => {
-        commit('BUY_STOCK', order);
-
-    }
-};
-
 export default {
-    mutations,
     actions
 };

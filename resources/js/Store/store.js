@@ -42,14 +42,6 @@ export default new Vuex.Store({
                     state.funds = response.data.funds
                 ));
         },
-        buyStock(state, stock) {
-            axios
-                .post('portfolio', stock)
-                .then(response => (
-                    console.log(response.data),
-                    this.commit('refreshData')
-                ));
-        },
         refreshData(){
             this.commit('loadStocks');
             this.commit('loadPortfolio');

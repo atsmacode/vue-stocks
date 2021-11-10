@@ -26,8 +26,7 @@ new Vue({
                 // Randomise a performance amount/new valuation
                 // Update stock value
         }
-    }
-    ,
+    },
     created() {
         // Load stocks and portfolios via axios
         this.$store.commit('loadStocks');

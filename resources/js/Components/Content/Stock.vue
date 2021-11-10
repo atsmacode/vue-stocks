@@ -22,7 +22,7 @@
 
                     <template v-else>
                         <p v-text="'You own: ' + stock.amount"></p>
-                        <p v-text="'Now worth: ' + stock.value"></p>
+                        <p v-text="'Now worth: ' + value"></p>
                         <br>
                         <button
                             type="submit"
@@ -48,16 +48,17 @@ export default {
             quantity: ''
         }
     },
+    computed: {
+        value(){
+            return this.stock.value * this.stock.amount;
+        }
+    },
     methods: {
         buy(){
-            this.$store.commit('buyStock', {'stock_id': this.stock.id, 'quantity': this.quantity, 'user_id': 1});
+            this.$store.dispatch('buyStock', {'stock_id': this.stock.id, 'quantity': this.quantity, 'user_id': 1});
         },
         sell(){
-            axios
-                .delete('portfolio' + '/' + this.stock.id)
-                .then(response => (
-                    this.$store.commit('refreshData')
-                ));
+            this.$store.dispatch('sellStock', this.stock.id);
         },
     },
     props: [
