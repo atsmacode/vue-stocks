@@ -6,10 +6,8 @@
             <app-stock v-for="stock in $store.getters.getStocks"
                        :portfolio="false"
                        :name="stock.name"
-                       :id="stock.id"
                        :description="stock.description"
-                       :available="stock.available"
-                       :price="stock.price"
+                       :stock="stock"
                        callToAction="Buy"
                        :key="stock.id"
             ></app-stock>

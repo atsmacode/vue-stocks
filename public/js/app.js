@@ -5259,30 +5259,26 @@ __webpack_require__.r(__webpack_exports__);
   name: "Stock",
   data: function data() {
     return {
-      quantity: 0
+      quantity: ''
     };
   },
   methods: {
     buy: function buy() {
-      var _this = this;
-
-      axios__WEBPACK_IMPORTED_MODULE_0___default().post('portfolio', {
-        'stock_id': this.id,
+      this.$store.commit('buyStock', {
+        'stock_id': this.stock.id,
         'quantity': this.quantity,
         'user_id': 1
-      }).then(function (response) {
-        return _this.$store.commit('loadStocks', response.data.stocks), _this.$store.commit('loadPortfolio', response.data.portfolio), _this.$store.commit('loadFunds', response.data.funds);
       });
     },
     sell: function sell() {
-      var _this2 = this;
+      var _this = this;
 
-      axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]('portfolio' + '/' + this.id).then(function (response) {
-        return console.log(response.data.funds), _this2.$store.commit('loadStocks', response.data.stocks), _this2.$store.commit('loadPortfolio', response.data.portfolio), _this2.$store.commit('loadFunds', response.data.funds);
+      axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]('portfolio' + '/' + this.stock.id).then(function (response) {
+        return _this.$store.commit('refreshData');
       });
     }
   },
-  props: ['portfolio', 'callToAction', 'name', 'description', 'amount', 'price', 'value', 'available', 'id']
+  props: ['portfolio', 'callToAction', 'name', 'description', 'stock']
 });
 
 /***/ }),
@@ -5463,8 +5459,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Portfolio.vue",
@@ -5504,8 +5498,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Stocks.vue",
@@ -5525,14 +5517,12 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
-/* harmony import */ var _Components_Navigation_Header__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/Navigation/Header */ "./resources/js/Components/Navigation/Header.vue");
-/* harmony import */ var _Components_Pages_Home__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/Pages/Home */ "./resources/js/Components/Pages/Home.vue");
-/* harmony import */ var _Components_Pages_Stocks__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Components/Pages/Stocks */ "./resources/js/Components/Pages/Stocks.vue");
-/* harmony import */ var _Components_Pages_Portfolio__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Components/Pages/Portfolio */ "./resources/js/Components/Pages/Portfolio.vue");
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _Components_Navigation_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Components/Navigation/Header */ "./resources/js/Components/Navigation/Header.vue");
+/* harmony import */ var _Components_Pages_Home__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/Pages/Home */ "./resources/js/Components/Pages/Home.vue");
+/* harmony import */ var _Components_Pages_Stocks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/Pages/Stocks */ "./resources/js/Components/Pages/Stocks.vue");
+/* harmony import */ var _Components_Pages_Portfolio__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Components/Pages/Portfolio */ "./resources/js/Components/Pages/Portfolio.vue");
+/* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/store */ "./resources/js/store/store.js");
 
 
 
@@ -5540,27 +5530,139 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+new vue__WEBPACK_IMPORTED_MODULE_6__["default"]({
+  el: '#app',
+  store: _store_store__WEBPACK_IMPORTED_MODULE_5__["default"],
+  computed: {
+    currentTab: function currentTab() {
+      return 'app-' + this.$store.state.currentPage;
+    }
+  },
+  components: {
+    appHeader: _Components_Navigation_Header__WEBPACK_IMPORTED_MODULE_1__["default"],
+    appHome: _Components_Pages_Home__WEBPACK_IMPORTED_MODULE_2__["default"],
+    appStocks: _Components_Pages_Stocks__WEBPACK_IMPORTED_MODULE_3__["default"],
+    appPortfolio: _Components_Pages_Portfolio__WEBPACK_IMPORTED_MODULE_4__["default"]
+  },
+  methods: {
+    daysTrading: function daysTrading() {// For each portfolio
+      // Randomise a performance amount/new valuation
+      // Update stock value
+    }
+  },
+  created: function created() {
+    // Load stocks and portfolios via axios
+    this.$store.commit('loadStocks');
+    this.$store.commit('loadPortfolio');
+    this.$store.commit('loadFunds');
+  }
+});
 
-vue__WEBPACK_IMPORTED_MODULE_6__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_7__["default"]);
-var store = new vuex__WEBPACK_IMPORTED_MODULE_7__["default"].Store({
+/***/ }),
+
+/***/ "./resources/js/store/Modules/stocks.js":
+/*!**********************************************!*\
+  !*** ./resources/js/store/Modules/stocks.js ***!
+  \**********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+
+var mutations = {
+  'BUY_STOCK': function BUY_STOCK(state, order) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default().post('portfolio', order).then(function (response) {
+      return console.log(response.data)
+      /*this.$store.commit('loadStocks'),
+      this.$store.commit('loadPortfolio'),
+      this.$store.commit('loadFunds')*/
+      ;
+    });
+  }
+};
+var actions = {
+  buyStock: function buyStock(_ref, order) {
+    var commit = _ref.commit;
+    commit('BUY_STOCK', order);
+  }
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  mutations: mutations,
+  actions: actions
+});
+
+/***/ }),
+
+/***/ "./resources/js/store/store.js":
+/*!*************************************!*\
+  !*** ./resources/js/store/store.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Modules_stocks__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Modules/stocks */ "./resources/js/store/Modules/stocks.js");
+
+
+
+
+vue__WEBPACK_IMPORTED_MODULE_2__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_3__["default"]);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (new vuex__WEBPACK_IMPORTED_MODULE_3__["default"].Store({
   state: {
     currentPage: 'home',
     stocks: [],
     portfolio: [],
     funds: 0
   },
+  modules: {
+    stocks: _Modules_stocks__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
   mutations: {
     navigateTo: function navigateTo(state, page) {
       state.currentPage = page;
     },
-    loadStocks: function loadStocks(state, stocks) {
-      state.stocks = stocks;
+    loadStocks: function loadStocks(state) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('stocks').then(function (response) {
+        return (//console.log(response.data)
+          state.stocks = response.data
+        );
+      });
     },
-    loadPortfolio: function loadPortfolio(state, portfolio) {
-      state.portfolio = portfolio;
+    loadPortfolio: function loadPortfolio(state) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('portfolio').then(function (response) {
+        return (//console.log(response.data)
+          state.portfolio = response.data
+        );
+      });
     },
-    loadFunds: function loadFunds(state, funds) {
-      state.funds = funds;
+    loadFunds: function loadFunds(state) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('user/1').then(function (response) {
+        return state.funds = response.data.funds;
+      });
+    },
+    buyStock: function buyStock(state, stock) {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('portfolio', stock).then(function (response) {
+        return console.log(response.data), _this.commit('refreshData');
+      });
+    },
+    refreshData: function refreshData() {
+      this.commit('loadStocks');
+      this.commit('loadPortfolio');
+      this.commit('loadFunds');
     }
   },
   getters: {
@@ -5574,49 +5676,7 @@ var store = new vuex__WEBPACK_IMPORTED_MODULE_7__["default"].Store({
       return state.funds;
     }
   }
-});
-new vue__WEBPACK_IMPORTED_MODULE_6__["default"]({
-  el: '#app',
-  data: {
-    url: 'http://localhost:8080/vue-stocks/public/'
-  },
-  store: store,
-  computed: {
-    currentTab: function currentTab() {
-      return 'app-' + this.$store.state.currentPage;
-    }
-  },
-  components: {
-    appHeader: _Components_Navigation_Header__WEBPACK_IMPORTED_MODULE_2__["default"],
-    appHome: _Components_Pages_Home__WEBPACK_IMPORTED_MODULE_3__["default"],
-    appStocks: _Components_Pages_Stocks__WEBPACK_IMPORTED_MODULE_4__["default"],
-    appPortfolio: _Components_Pages_Portfolio__WEBPACK_IMPORTED_MODULE_5__["default"]
-  },
-  methods: {
-    daysTrading: function daysTrading() {// For each portfolio
-      // Randomise a performance amount/new valuation
-      // Update stock value
-    }
-  },
-  mounted: function mounted() {
-    var _this = this;
-
-    // Load stocks and portfolios via axios
-    axios__WEBPACK_IMPORTED_MODULE_1___default().get(this.url + 'stocks').then(function (response) {
-      return (//console.log(response.data)
-        _this.$store.commit('loadStocks', response.data)
-      );
-    });
-    axios__WEBPACK_IMPORTED_MODULE_1___default().get(this.url + 'portfolio').then(function (response) {
-      return (//console.log(response.data)
-        _this.$store.commit('loadPortfolio', response.data)
-      );
-    });
-    axios__WEBPACK_IMPORTED_MODULE_1___default().get(this.url + 'user/1').then(function (response) {
-      return _this.$store.commit('loadFunds', response.data.funds);
-    });
-  }
-});
+}));
 
 /***/ }),
 
@@ -11396,9 +11456,11 @@ var render = function () {
             _vm._v(" "),
             !_vm.portfolio
               ? [
-                  _c("p", [_vm._v("Available: " + _vm._s(_vm.available))]),
+                  _c("p", [
+                    _vm._v("Available: " + _vm._s(_vm.stock.available)),
+                  ]),
                   _vm._v(" "),
-                  _c("p", [_vm._v("Price: " + _vm._s(_vm.price))]),
+                  _c("p", [_vm._v("Price: " + _vm._s(_vm.stock.price))]),
                   _vm._v(" "),
                   _c("input", {
                     directives: [
@@ -11442,12 +11504,14 @@ var render = function () {
                 ]
               : [
                   _c("p", {
-                    domProps: { textContent: _vm._s("You own: " + _vm.amount) },
+                    domProps: {
+                      textContent: _vm._s("You own: " + _vm.stock.amount),
+                    },
                   }),
                   _vm._v(" "),
                   _c("p", {
                     domProps: {
-                      textContent: _vm._s("Now worth: " + _vm.value),
+                      textContent: _vm._s("Now worth: " + _vm.stock.value),
                     },
                   }),
                   _vm._v(" "),
@@ -11733,10 +11797,8 @@ var render = function () {
           attrs: {
             portfolio: true,
             name: portfolio.stock.name,
-            id: portfolio.id,
             description: portfolio.stock.description,
-            amount: portfolio.amount,
-            value: portfolio.value,
+            stock: portfolio,
             callToAction: "Sell",
           },
         })
@@ -11782,10 +11844,8 @@ var render = function () {
           attrs: {
             portfolio: false,
             name: stock.name,
-            id: stock.id,
             description: stock.description,
-            available: stock.available,
-            price: stock.price,
+            stock: stock,
             callToAction: "Buy",
           },
         })

@@ -9,8 +9,8 @@
                     <p v-text="description" class="card-text"></p>
 
                     <template v-if="!portfolio">
-                        <p>Available: {{ available }}</p>
-                        <p>Price: {{ price }}</p>
+                        <p>Available: {{ stock.available }}</p>
+                        <p>Price: {{ stock.price }}</p>
                         <input class="form-control" type="text" name="quantity" v-model="quantity" placeholder="Buy Quantity" />
                         <br>
                         <button
@@ -21,8 +21,8 @@
                     </template>
 
                     <template v-else>
-                        <p v-text="'You own: ' + amount"></p>
-                        <p v-text="'Now worth: ' + value"></p>
+                        <p v-text="'You own: ' + stock.amount"></p>
+                        <p v-text="'Now worth: ' + stock.value"></p>
                         <br>
                         <button
                             type="submit"
@@ -45,32 +45,19 @@ export default {
     name: "Stock",
     data() {
         return {
-            quantity: 0
+            quantity: ''
         }
     },
     methods: {
         buy(){
-
-            axios
-                .post('portfolio', {'stock_id': this.id, 'quantity': this.quantity, 'user_id': 1})
-                .then(response => (
-                    this.$store.commit('loadStocks', response.data.stocks),
-                    this.$store.commit('loadPortfolio', response.data.portfolio),
-                    this.$store.commit('loadFunds', response.data.funds)
-                ));
-
+            this.$store.commit('buyStock', {'stock_id': this.stock.id, 'quantity': this.quantity, 'user_id': 1});
         },
         sell(){
-
             axios
-                .delete('portfolio' + '/' + this.id)
+                .delete('portfolio' + '/' + this.stock.id)
                 .then(response => (
-                    console.log(response.data.funds),
-                    this.$store.commit('loadStocks', response.data.stocks),
-                    this.$store.commit('loadPortfolio', response.data.portfolio),
-                    this.$store.commit('loadFunds', response.data.funds)
+                    this.$store.commit('refreshData')
                 ));
-
         },
     },
     props: [
@@ -78,11 +65,7 @@ export default {
         'callToAction',
         'name',
         'description',
-        'amount',
-        'price',
-        'value',
-        'available',
-        'id'
+        'stock'
     ]
 }
 </script>
