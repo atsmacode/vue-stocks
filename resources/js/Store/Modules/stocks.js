@@ -15,7 +15,7 @@ const actions = {
         axios
             .post('stock/sell', order)
             .then(response => (
-                console.log(response.data),
+                console.log(response),
                     commit('refreshData')
             ));
     }

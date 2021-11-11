@@ -59,7 +59,7 @@ export default {
         },
         sell(){
             console.log(this.stock);
-            this.$store.dispatch('sellStock', {'stock_id': this.stock.stock.id, 'quantity': this.stock.amount, 'user_id': 1});
+            this.$store.dispatch('sellStock', {'stock_id': this.stock.stock_id, 'quantity': this.stock.amount, 'user_id': 1});
         },
     },
     props: [

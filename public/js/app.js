@@ -5278,7 +5278,7 @@ __webpack_require__.r(__webpack_exports__);
     sell: function sell() {
       console.log(this.stock);
       this.$store.dispatch('sellStock', {
-        'stock_id': this.stock.stock.id,
+        'stock_id': this.stock.stock_id,
         'quantity': this.stock.amount,
         'user_id': 1
       });
@@ -5523,12 +5523,14 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var _Components_Navigation_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Components/Navigation/Header */ "./resources/js/Components/Navigation/Header.vue");
 /* harmony import */ var _Components_Pages_Home__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/Pages/Home */ "./resources/js/Components/Pages/Home.vue");
 /* harmony import */ var _Components_Pages_Stocks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/Pages/Stocks */ "./resources/js/Components/Pages/Stocks.vue");
 /* harmony import */ var _Components_Pages_Portfolio__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Components/Pages/Portfolio */ "./resources/js/Components/Pages/Portfolio.vue");
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/store */ "./resources/js/store/store.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
@@ -5536,7 +5538,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-new vue__WEBPACK_IMPORTED_MODULE_6__["default"]({
+
+(axios__WEBPACK_IMPORTED_MODULE_6___default().defaults.withCredentials) = true;
+new vue__WEBPACK_IMPORTED_MODULE_7__["default"]({
   el: '#app',
   store: _store_store__WEBPACK_IMPORTED_MODULE_5__["default"],
   computed: {
@@ -5561,6 +5565,9 @@ new vue__WEBPACK_IMPORTED_MODULE_6__["default"]({
     this.$store.commit('loadStocks');
     this.$store.commit('loadPortfolio');
     this.$store.commit('loadFunds');
+    axios__WEBPACK_IMPORTED_MODULE_6___default().get('/sanctum/csrf-cookie').then(function (response) {
+      console.log(response); // Login...
+    });
   }
 });
 
@@ -5591,7 +5598,7 @@ var actions = {
     var commit = _ref2.commit;
     console.log(order);
     axios__WEBPACK_IMPORTED_MODULE_0___default().post('stock/sell', order).then(function (response) {
-      return console.log(response.data), commit('refreshData');
+      return console.log(response), commit('refreshData');
     });
   }
 };
