@@ -3,15 +3,17 @@ import axios from "axios";
 const actions = {
     buyStock: ({commit}, order) => {
         axios
-            .post('portfolio', order)
+            .post('stock/order', order)
             .then(response => (
                 console.log(response.data),
                 commit('refreshData')
             ));
     },
-    sellStock: ({commit}, stock_id) => {
+    sellStock: ({commit}, order) => {
+
+        console.log(order);
         axios
-            .delete('portfolio' + '/' + stock_id)
+            .post('stock/sell', order)
             .then(response => (
                 console.log(response.data),
                     commit('refreshData')

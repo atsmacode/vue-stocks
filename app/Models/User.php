@@ -46,4 +46,14 @@ class User extends Authenticatable
         return $this->hasMany(Portfolio::class);
     }
 
+    public function buyPortfolio($params){
+        $this->portfolio()->create($params);
+        $this->decrement('funds', $params['value']);
+    }
+
+    public function sellPortfolio($params){
+        $this->portfolio->where('stock_id', $params['stock_id'])->first()->delete();
+        $this->increment('funds', $params['value']);
+    }
+
 }

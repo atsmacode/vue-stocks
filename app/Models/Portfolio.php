@@ -15,4 +15,15 @@ class Portfolio extends Model
     {
         return $this->belongsTo(Stock::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function sell()
+    {
+        $this->user->increment('funds', $this->value);
+        $this->delete();
+    }
 }

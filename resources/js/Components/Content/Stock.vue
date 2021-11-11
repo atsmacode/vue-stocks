@@ -50,7 +50,7 @@ export default {
     },
     computed: {
         value(){
-            return this.stock.value * this.stock.amount;
+            return this.stock.value;
         }
     },
     methods: {
@@ -58,7 +58,8 @@ export default {
             this.$store.dispatch('buyStock', {'stock_id': this.stock.id, 'quantity': this.quantity, 'user_id': 1});
         },
         sell(){
-            this.$store.dispatch('sellStock', this.stock.id);
+            console.log(this.stock);
+            this.$store.dispatch('sellStock', {'stock_id': this.stock.stock.id, 'quantity': this.stock.amount, 'user_id': 1});
         },
     },
     props: [

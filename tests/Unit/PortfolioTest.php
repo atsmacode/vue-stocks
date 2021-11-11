@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Portfolio;
 use App\Models\Stock;
 use App\Models\User;
+use App\StockBroker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -21,9 +22,9 @@ class PortfolioTest extends BaseTestCase
      * @test
      * @return void
      */
-    public function can_purchase_a_stock()
+    public function a_portfolio_can_be_created_for_a_user()
     {
-        $stock = Stock::factory()->create();
+        $stock = Stock::factory()->create(['available' => 100, 'price' => 5]);
         $user = User::factory()->create();
 
         Portfolio::create([

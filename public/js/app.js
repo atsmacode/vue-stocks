@@ -5264,7 +5264,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     value: function value() {
-      return this.stock.value * this.stock.amount;
+      return this.stock.value;
     }
   },
   methods: {
@@ -5276,7 +5276,12 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     sell: function sell() {
-      this.$store.dispatch('sellStock', this.stock.id);
+      console.log(this.stock);
+      this.$store.dispatch('sellStock', {
+        'stock_id': this.stock.stock.id,
+        'quantity': this.stock.amount,
+        'user_id': 1
+      });
     }
   },
   props: ['portfolio', 'callToAction', 'name', 'description', 'stock']
@@ -5578,13 +5583,14 @@ __webpack_require__.r(__webpack_exports__);
 var actions = {
   buyStock: function buyStock(_ref, order) {
     var commit = _ref.commit;
-    axios__WEBPACK_IMPORTED_MODULE_0___default().post('portfolio', order).then(function (response) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default().post('stock/order', order).then(function (response) {
       return console.log(response.data), commit('refreshData');
     });
   },
-  sellStock: function sellStock(_ref2, stock_id) {
+  sellStock: function sellStock(_ref2, order) {
     var commit = _ref2.commit;
-    axios__WEBPACK_IMPORTED_MODULE_0___default()["delete"]('portfolio' + '/' + stock_id).then(function (response) {
+    console.log(order);
+    axios__WEBPACK_IMPORTED_MODULE_0___default().post('stock/sell', order).then(function (response) {
       return console.log(response.data), commit('refreshData');
     });
   }

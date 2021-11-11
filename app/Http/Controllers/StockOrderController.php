@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Stock;
 use Illuminate\Http\Request;
 
-class StockController extends Controller
+class StockOrderController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +14,7 @@ class StockController extends Controller
      */
     public function index()
     {
-        return response(Stock::all(), 200);
+        //
     }
 
     /**
@@ -35,7 +35,8 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-
+        Stock::find($request->stock_id)
+            ->sellTo($request->user_id, $request->quantity);
     }
 
     /**
@@ -81,5 +82,11 @@ class StockController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function sellStock(Request $request)
+    {
+        Stock::find($request->stock_id)
+            ->sellFrom($request->user_id, $request->quantity);
     }
 }

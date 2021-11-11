@@ -11,15 +11,6 @@ use Illuminate\Support\Facades\DB;
 class PortfolioController extends Controller
 {
 
-    private function returnAndRefresh()
-    {
-        return response([
-            'funds' => User::find(1)->funds,
-            'stocks' => Stock::all(),
-            'portfolio' => Portfolio::where('user_id', 1)->with('stock')->get()],
-            200);
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -48,23 +39,7 @@ class PortfolioController extends Controller
      */
     public function store(Request $request)
     {
-        Portfolio::create([
-            'user_id' => $request->user_id,
-            'stock_id' => $request->stock_id,
-            'amount' => $request->quantity,
-            'value' => $request->quantity
-        ]);
-
-        DB::table('stocks')
-            ->where('id', $request->stock_id)
-            ->decrement('available', $request->quantity);
-
-        DB::table('users')
-            ->where('id', 1)
-            ->decrement('funds', $request->quantity * Stock::find($request->stock_id)->price);
-
-        return $this->returnAndRefresh();
-
+        //
     }
 
     /**
@@ -109,21 +84,7 @@ class PortfolioController extends Controller
      */
     public function destroy($id)
     {
-        $portfolio = Portfolio::find($id);
-
-        DB::table('stocks')
-            ->where('id', $portfolio->stock_id)
-            ->increment('available', $portfolio->amount);
-
-        DB::table('users')
-            ->where('id', 1)
-            ->increment('funds', $portfolio->amount * Stock::find($portfolio->stock_id)->price);
-
-        //dump($portfolio->amount);
-        $portfolio->delete();
-
-        return $this->returnAndRefresh();
-
+        //
     }
 
 }
