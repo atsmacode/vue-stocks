@@ -55,11 +55,11 @@ export default {
     },
     methods: {
         buy(){
-            this.$store.dispatch('buyStock', {'stock_id': this.stock.id, 'quantity': this.quantity, 'user_id': 1});
+            console.log(this.$store.state.user.id);
+            this.$store.dispatch('buyStock', {'stock_id': this.stock.id, 'quantity': this.quantity, 'user_id': this.$store.state.user.id});
         },
         sell(){
-            console.log(this.stock);
-            this.$store.dispatch('sellStock', {'stock_id': this.stock.stock_id, 'quantity': this.stock.amount, 'user_id': 1});
+            this.$store.dispatch('sellStock', {'stock_id': this.stock.stock_id, 'quantity': this.stock.amount, 'user_id': this.$store.state.user.id});
         },
     },
     props: [

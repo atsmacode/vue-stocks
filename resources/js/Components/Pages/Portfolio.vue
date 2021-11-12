@@ -3,7 +3,7 @@
         <h1 class="display-1">Portfolio</h1>
         <p>Here are all the stocks you own and how they are doing</p>
         <div class="row">
-            <app-stock v-for="portfolio in $store.getters.getPortfolio"
+            <app-stock v-for="portfolio in portfolios"
                        :portfolio="true"
                        :name="portfolio.stock.name"
                        :description="portfolio.stock.description"
@@ -21,6 +21,11 @@ import Stock from "../Content/Stock";
 
 export default {
     name: "Portfolio.vue",
+    computed: {
+        portfolios(){
+            return this.$store.getters.getPortfolio;
+        }
+    },
     components: {
         appStock: Stock
     },

@@ -5269,18 +5269,18 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     buy: function buy() {
+      console.log(this.$store.state.user.id);
       this.$store.dispatch('buyStock', {
         'stock_id': this.stock.id,
         'quantity': this.quantity,
-        'user_id': 1
+        'user_id': this.$store.state.user.id
       });
     },
     sell: function sell() {
-      console.log(this.stock);
       this.$store.dispatch('sellStock', {
         'stock_id': this.stock.stock_id,
         'quantity': this.stock.amount,
-        'user_id': 1
+        'user_id': this.$store.state.user.id
       });
     }
   },
@@ -5300,6 +5300,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -5316,11 +5318,67 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+
+(axios__WEBPACK_IMPORTED_MODULE_0___default().defaults.withCredentials) = true;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "AccountMenu.vue",
+  data: function data() {
+    return {
+      email: '',
+      password: ''
+    };
+  },
+  computed: {
+    funds: function funds() {
+      return this.$store.state.user.funds;
+    },
+    user: function user() {
+      return this.$store.state.user;
+    }
+  },
   methods: {
     endDay: function endDay(user) {},
-    saveAndLoad: function saveAndLoad(user) {}
+    saveAndLoad: function saveAndLoad(user) {},
+    logIn: function logIn() {
+      var _this = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('/sanctum/csrf-cookie').then(function (response) {
+        console.log(response); // Login...
+
+        axios__WEBPACK_IMPORTED_MODULE_0___default().post('login', {
+          email: _this.email,
+          password: _this.password
+        }).then(function (response) {
+          console.log(response.data.user);
+
+          _this.$store.commit('setUser', response.data.user);
+
+          _this.$store.commit('refreshData');
+
+          _this.$store.commit('navigateTo', 'portfolio');
+        });
+      });
+    },
+    logOut: function logOut() {
+      var _this2 = this;
+
+      axios__WEBPACK_IMPORTED_MODULE_0___default().post('logout').then(function (response) {
+        console.log(response);
+        _this2.session = false;
+
+        _this2.$store.commit('clearData');
+
+        _this2.$store.commit('navigateTo', 'home');
+      });
+    }
   }
 });
 
@@ -5421,6 +5479,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
 //
 //
 //
@@ -5429,8 +5489,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  name: "Home.vue"
+  name: "Home.vue",
+  computed: {
+    funds: function funds() {
+      return this.$store.state.user.funds;
+    }
+  }
 });
 
 /***/ }),
@@ -5468,6 +5534,11 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Portfolio.vue",
+  computed: {
+    portfolios: function portfolios() {
+      return this.$store.getters.getPortfolio;
+    }
+  },
   components: {
     appStock: _Content_Stock__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -5507,6 +5578,11 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "Stocks.vue",
+  computed: {
+    stocks: function stocks() {
+      return this.$store.getters.getStocks;
+    }
+  },
   components: {
     appStock: _Content_Stock__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
@@ -5523,14 +5599,12 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var bootstrap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm.js");
 /* harmony import */ var _Components_Navigation_Header__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Components/Navigation/Header */ "./resources/js/Components/Navigation/Header.vue");
 /* harmony import */ var _Components_Pages_Home__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Components/Pages/Home */ "./resources/js/Components/Pages/Home.vue");
 /* harmony import */ var _Components_Pages_Stocks__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Components/Pages/Stocks */ "./resources/js/Components/Pages/Stocks.vue");
 /* harmony import */ var _Components_Pages_Portfolio__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Components/Pages/Portfolio */ "./resources/js/Components/Pages/Portfolio.vue");
 /* harmony import */ var _store_store__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./store/store */ "./resources/js/store/store.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
@@ -5538,9 +5612,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-(axios__WEBPACK_IMPORTED_MODULE_6___default().defaults.withCredentials) = true;
-new vue__WEBPACK_IMPORTED_MODULE_7__["default"]({
+new vue__WEBPACK_IMPORTED_MODULE_6__["default"]({
   el: '#app',
   store: _store_store__WEBPACK_IMPORTED_MODULE_5__["default"],
   computed: {
@@ -5559,15 +5631,6 @@ new vue__WEBPACK_IMPORTED_MODULE_7__["default"]({
       // Randomise a performance amount/new valuation
       // Update stock value
     }
-  },
-  created: function created() {
-    // Load stocks and portfolios via axios
-    this.$store.commit('loadStocks');
-    this.$store.commit('loadPortfolio');
-    this.$store.commit('loadFunds');
-    axios__WEBPACK_IMPORTED_MODULE_6___default().get('/sanctum/csrf-cookie').then(function (response) {
-      console.log(response); // Login...
-    });
   }
 });
 
@@ -5591,12 +5654,11 @@ var actions = {
   buyStock: function buyStock(_ref, order) {
     var commit = _ref.commit;
     axios__WEBPACK_IMPORTED_MODULE_0___default().post('stock/order', order).then(function (response) {
-      return console.log(response.data), commit('refreshData');
+      return console.log('test:' + response.data), commit('refreshData');
     });
   },
   sellStock: function sellStock(_ref2, order) {
     var commit = _ref2.commit;
-    console.log(order);
     axios__WEBPACK_IMPORTED_MODULE_0___default().post('stock/sell', order).then(function (response) {
       return console.log(response), commit('refreshData');
     });
@@ -5634,7 +5696,8 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_3_
     currentPage: 'home',
     stocks: [],
     portfolio: [],
-    funds: 0
+    funds: 0,
+    user: false
   },
   modules: {
     stocks: _Modules_stocks__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -5657,15 +5720,24 @@ vue__WEBPACK_IMPORTED_MODULE_2__["default"].use(vuex__WEBPACK_IMPORTED_MODULE_3_
         );
       });
     },
-    loadFunds: function loadFunds(state) {
-      axios__WEBPACK_IMPORTED_MODULE_0___default().get('user/1').then(function (response) {
-        return state.funds = response.data.funds;
+    loadUser: function loadUser(state) {
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('user/' + this.state.user.id).then(function (response) {
+        return console.log(response), state.user = response.data;
       });
+    },
+    setUser: function setUser(state, user) {
+      state.user = user;
     },
     refreshData: function refreshData() {
       this.commit('loadStocks');
       this.commit('loadPortfolio');
-      this.commit('loadFunds');
+      this.commit('loadUser');
+    },
+    clearData: function clearData(state) {
+      state.stocks = [];
+      state.portfolio = [];
+      state.funds = 0;
+      state.user = false;
     }
   },
   getters: {
@@ -11564,13 +11636,79 @@ var render = function () {
   var _c = _vm._self._c || _h
   return _c("span", { staticClass: "navbar-text" }, [
     _c("ul", { staticClass: "navbar-nav me-auto mb-2 mb-lg-0" }, [
+      !_vm.user
+        ? _c("li", { staticClass: "nav-item" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.email,
+                  expression: "email",
+                },
+              ],
+              attrs: { type: "text", name: "email" },
+              domProps: { value: _vm.email },
+              on: {
+                input: function ($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.email = $event.target.value
+                },
+              },
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.password,
+                  expression: "password",
+                },
+              ],
+              attrs: { type: "text", name: "password" },
+              domProps: { value: _vm.password },
+              on: {
+                input: function ($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.password = $event.target.value
+                },
+              },
+            }),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                attrs: { href: "#" },
+                on: { click: _vm.logIn },
+              },
+              [_vm._v("Login")]
+            ),
+          ])
+        : _c("li", { staticClass: "nav-item" }, [
+            _c(
+              "a",
+              {
+                staticClass: "nav-link",
+                attrs: { href: "#" },
+                on: { click: _vm.logOut },
+              },
+              [_vm._v("Logout")]
+            ),
+          ]),
+      _vm._v(" "),
       _vm._m(0),
       _vm._v(" "),
       _vm._m(1),
       _vm._v(" "),
       _c("li", { staticClass: "nav-item" }, [
         _c("a", { staticClass: "nav-link", attrs: { href: "#" } }, [
-          _vm._v("Funds: £" + _vm._s(_vm.$store.getters.loadFunds)),
+          _vm._v("Funds: £" + _vm._s(_vm.funds)),
         ]),
       ]),
     ]),
@@ -11760,7 +11898,7 @@ var render = function () {
     _vm._v(" "),
     _c("p", [_vm._v("This is your home page, use the top menu to navigate")]),
     _vm._v(" "),
-    _c("h2", [_vm._v("Your funds: £" + _vm._s(_vm.$store.getters.loadFunds))]),
+    _c("h2", [_vm._v("Your funds: £" + _vm._s(_vm.funds))]),
   ])
 }
 var staticRenderFns = []
@@ -11794,7 +11932,7 @@ var render = function () {
     _c(
       "div",
       { staticClass: "row" },
-      _vm._l(_vm.$store.getters.getPortfolio, function (portfolio) {
+      _vm._l(_vm.portfolios, function (portfolio) {
         return _c("app-stock", {
           key: portfolio.id,
           attrs: {
@@ -11841,7 +11979,7 @@ var render = function () {
     _c(
       "div",
       { staticClass: "row" },
-      _vm._l(_vm.$store.getters.getStocks, function (stock) {
+      _vm._l(_vm.stocks, function (stock) {
         return _c("app-stock", {
           key: stock.id,
           attrs: {

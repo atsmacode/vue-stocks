@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PortfolioController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\StockOrderController;
@@ -21,9 +22,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('stocks', StockController::class);
-Route::resource('portfolio', PortfolioController::class);
-Route::resource('user', UserController::class);
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::post('stock/order', [StockOrderController::class, 'store']);
+    Route::post('stock/sell', [StockOrderController::class, 'sellStock']);
+    Route::resource('stocks', StockController::class);
+    Route::resource('portfolio', PortfolioController::class);
+    Route::resource('user', UserController::class);
+    Route::post('logout', [LoginController::class, 'logout']);
+});
 
-Route::post('stock/order', [StockOrderController::class, 'store']);
-Route::post('stock/sell', [StockOrderController::class, 'sellStock']);
+Route::post('login', [LoginController::class, 'authenticate']);
+

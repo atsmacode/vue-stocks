@@ -3,7 +3,7 @@
         <h1 class="display-1">Stocks</h1>
         <p>These are all the stocks available to buy</p>
         <div class="row">
-            <app-stock v-for="stock in $store.getters.getStocks"
+            <app-stock v-for="stock in stocks"
                        :portfolio="false"
                        :name="stock.name"
                        :description="stock.description"
@@ -20,6 +20,11 @@ import Stock from "../Content/Stock";
 
 export default {
     name: "Stocks.vue",
+    computed: {
+        stocks(){
+            return this.$store.getters.getStocks;
+        }
+    },
     components: {
         appStock: Stock
     }

@@ -10,7 +10,8 @@ export default new Vuex.Store({
         currentPage: 'home',
         stocks: [],
         portfolio: [],
-        funds: 0
+        funds: 0,
+        user: false
     },
     modules: {
         stocks
@@ -35,17 +36,27 @@ export default new Vuex.Store({
                     state.portfolio = response.data
                 ));
         },
-        loadFunds(state) {
+        loadUser(state) {
             axios
-                .get('user/1')
+                .get('user/' + this.state.user.id)
                 .then(response => (
-                    state.funds = response.data.funds
+                    console.log(response),
+                    state.user = response.data
                 ));
+        },
+        setUser(state, user){
+            state.user = user;
         },
         refreshData(){
             this.commit('loadStocks');
             this.commit('loadPortfolio');
-            this.commit('loadFunds');
+            this.commit('loadUser');
+        },
+        clearData(state){
+            state.stocks = [];
+            state.portfolio = [];
+            state.funds = 0;
+            state.user = false;
         }
     },
     getters: {

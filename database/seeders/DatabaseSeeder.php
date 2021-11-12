@@ -25,5 +25,12 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('a2s3d4F%G^'),
             'funds' => 1000
         ]);
+
+        User::create([
+            'name' => 'Mark Ramage',
+            'email' => 'mark@stocks.com',
+            'password' => bcrypt('a2s3d4F%G^'),
+            'funds' => 1000
+        ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Portfolio;
 use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PortfolioController extends Controller
@@ -18,7 +19,7 @@ class PortfolioController extends Controller
      */
     public function index()
     {
-        return response(Portfolio::where('user_id', 1)->with('stock')->get(),200);
+        return response(Portfolio::where('user_id', Auth::id())->with('stock')->get(),200);
     }
 
     /**

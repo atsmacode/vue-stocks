@@ -5,13 +5,11 @@ const actions = {
         axios
             .post('stock/order', order)
             .then(response => (
-                console.log(response.data),
+                console.log('test:' + response.data),
                 commit('refreshData')
             ));
     },
     sellStock: ({commit}, order) => {
-
-        console.log(order);
         axios
             .post('stock/sell', order)
             .then(response => (
