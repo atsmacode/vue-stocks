@@ -11842,7 +11842,6 @@ var render = function () {
         "a",
         {
           staticClass: "nav-link",
-          attrs: { href: "#" },
           on: {
             click: function ($event) {
               return _vm.navigateTo("portfolio")
@@ -11858,7 +11857,6 @@ var render = function () {
         "a",
         {
           staticClass: "nav-link",
-          attrs: { href: "#" },
           on: {
             click: function ($event) {
               return _vm.navigateTo("stocks")
